@@ -1,0 +1,31 @@
+{extend name='common/common'}
+{block name='css'}
+<style>
+
+</style>
+{/block}
+{block name='body'}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin: 20px">
+  <ul class="layui-tab-title">
+    <li class="layui-this">数据中心</li>
+  </ul>
+  <div class="layui-tab-content" style="padding: 20px">
+    <div class="layui-card" style="width: 300px;">
+      <div class="layui-card-header">文章数</div>
+      <div class="layui-card-body">
+        <span>120</span>个
+      </div>
+    </div>
+  </div>
+</div>
+{/block}
+{block name='js'}
+<script>
+  //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+  layui.use('element', function(){
+    var element = layui.element;
+
+    //…
+  });
+</script>
+{/block}

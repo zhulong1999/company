@@ -1,0 +1,69 @@
+﻿{extend name='common'}
+{block name='body'}
+    <div class="mainbox">
+    <div class="indtitle" style="background:url(__STATIC__/index/images/tit_line.png) bottom center no-repeat;">企业简介</div>
+    <div class="indconbox">
+        <ul class="abouticonlist cl">
+            {volist name='qiye_jianjie' id='vo' key='key'}
+            <li class="icon{$key}">
+                <div class="iconimg"><img src="__STATIC__/index/images/icon{$key}.png" /></div>
+                <div class="tit">{$vo.title}</div>
+                <div class="txt">{$vo.content}</div>
+                <a href="{:url('Index/about')}">查看详情 >></a>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+</div>
+    <div class="indtitle" style="background:url(images/tit_line2.png) bottom center no-repeat;">精品展示</div>
+    <div class="indconbox">
+    	<ul class="prolist cl">
+            {volist name='jingping_zhanshi' id='vo'}
+        	<li>
+            	<a href="info.html">
+                	<img src="{$vo.images}" class="imglist"/>
+                    <div class="name">{$vo.title}</div>
+                </a>
+            </li>
+            {/volist}
+
+        </ul>
+    </div>
+    <div class="indtitle" style="background:url(__STATIC__/index/images/tit_line2.png) bottom center no-repeat;">行业动态</div>
+    <div class="indconbox cl">
+        <div class="newslist fr" style="width:580px;">
+        	<div class="newstit"><a href="#">+更多</a>行业资讯</div>
+            <ul class="txtlist">
+                {volist name='hangye_dongtai' id='vo'}
+                {if condition='$vo.typeid == 8'}
+            	<li><a href="info.html">{$vo.title}</a><span>{:date('Y-m-d',$vo.pubtime)}</span></li>
+                {/if}
+                {/volist}
+            </ul>
+        </div>
+        <div class="newslist fl" style="width:580px;">
+        	<div class="newstit"><a href="#">+更多</a>企业动态</div>
+            <ul class="txtlist">
+                <ul class="txtlist">
+                    {volist name='hangye_dongtai' id='vo'}
+                    {if condition='$vo.typeid == 7'}
+                    <li><a href="info.html">{$vo.title}</a><span>{:date('Y-m-d',$vo.pubtime)}</span></li>
+                    {/if}
+                    {/volist}
+                </ul>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="links">
+	<div class="contentbox">
+    	<p>友情链接：</p>
+        {volist name='link' id='vo'}
+        <a href="{$vo.link}" target="_blank">{$vo.title} </a>
+        {/volist}
+    </div>
+</div>
+{/block}
+{block name='js'}{/block}
+
+

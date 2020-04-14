@@ -1,0 +1,88 @@
+
+{extend name='common:common'/}
+{block name='css'}
+    <style>
+        body{
+            background: #F0F0F0;
+        }
+    </style>
+{/block}
+{block name='body'}
+    <div id="LAY_WRAP">
+        <div id='LAY_app' class="layui-side layui-bg-black" >
+            <div class="layui-side-scroll"  style="background: #393D49">
+                <div class="layui-logo" lay-href="" style="background: #2F9688 !important"> <span>商城后台管理系统</span> </div>
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-left layui-nav-tree" lay-filter="layui-nav-left"  style="background: #393D49">
+                    <!--<li class="layui-nav-item layui-this">-->
+                        <!--<a href="{:url('Index/home')}" target="adminNav"><i class="layui-icon">&#xe629;</i> <cite >数据中心</cite></a>-->
+                    <!--</li>-->
+
+                    <!--<li class="layui-nav-item ">-->
+                        <!--<a class="" href="javascript:;"><i class="layui-icon">&#xe857;</i> <cite>全局配置</cite></a>-->
+                        <!--<dl class="layui-nav-child">-->
+                            <!--<dd>-->
+                                <!--<a class="" href="{:url('Index/home')}" target="adminNav"> <i class="layui-icon">&#xe674;</i><cite>配置参数</cite></a>-->
+                            <!--</dd>-->
+                            <!--<dd>-->
+                                <!--<a class="" href="javascript:;"> <i class="layui-icon">&#xe62a;</i><cite >邮箱配置</cite></a>-->
+                            <!--</dd>-->
+                        <!--</dl>-->
+                    <!--</li>-->
+
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="javascript:;"><i class="layui-icon">&#xe631;</i> <cite >基础设置</cite></a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="{:url('Basics/site')}" target="adminNav"> <i class="layui-icon">&#xe638;</i><cite>站点设置</cite></a></dd>
+                            <dd><a href="{:url('Basics/introduce')}" target="adminNav"> <i class="layui-icon">&#xe66e;</i><cite >公司设置</cite></a></dd>
+                            <dd><a href="{:url('Basics/navigation')}" target="adminNav"><i class="layui-icon">&#xe60a;</i><cite >栏目设置</cite></a></dd>
+                        </dl>
+                    </li>
+
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="javascript:;"><i class="layui-icon">&#xe656;</i> <cite >文章管理</cite></a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="{:url('Article/articlelist')}" target="adminNav"> <i class="layui-icon">&#xe63c;</i><cite >文章列表</cite></a></dd>
+                            <dd><a href="{:url('Article/addarticleinfo')}" target="adminNav"> <i class="layui-icon">&#xe61f;</i><cite >添加文章</cite></a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="javascript:;"><i class="layui-icon">&#xe628;</i> <cite >扩展设置</cite></a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="{:url('Extend/wheelimage')}" target="adminNav"> <i class="layui-icon">&#xe634;</i><cite >轮播图设置</cite></a></dd>
+                            <!--<dd><a href="{:url('Extend/wheelimage')}" target="adminNav"> <i class="layui-icon">&#xe606;</i><cite >留言列表</cite></a></dd>-->
+                            <dd><a href="{:url('Extend/friendship')}" target="adminNav"> <i class="layui-icon">&#xe64c;</i><cite >友情链接</cite></a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="javascript:;"><i class="layui-icon">&#xe716;</i> <cite>系统配置</cite></a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="{:url('System/serverinfo')}" target="adminNav"> <i class="layui-icon">&#xe628;</i><cite >服务器信息</cite></a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!--主体-->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layui-header" style="height: 5%;">
+                <!-- 头部区域 -->
+                <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+                    <li class="layui-nav-item"><a href="{:url('index/Index/index')}" target="_blank"><i class="layui-icon layui-icon-website"></i> 网站主页</a></li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"> <i class="layui-icon">&#xe66f;</i> <span>{$Think.session.user['user']}</span> <span class="layui-nav-more"></span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="{:url('User/adminoperation')}" style="cursor: pointer;text-align: center;" target="adminNav">操作</a></dd>
+                            <hr>
+                            <dd layadmin-event="logout" style="text-align: center;cursor: pointer"><a href="{:url('User/outLogin')}">退出</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+            <!--<iframe src="{:url('Index/home')}" name="adminNav" style="height: 94%;width: 100%" frameborder="0"></iframe>-->
+            <iframe src="{:url('Basics/site')}" name="adminNav" style="height: 94%;width: 100%" frameborder="0"></iframe>
+
+        </div>
+    </div>
+{/block}

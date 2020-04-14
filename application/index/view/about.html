@@ -1,0 +1,55 @@
+﻿{extend name='common'}
+{block name='title'}{$data.title}{/block}
+{block name='Keywords'}{$data.keywords}{/block}
+{block name='description'}{$data.description}{/block}
+{block name='body'}
+<div class="bg_b">
+    <div class="pst">
+        您当前的位置：<a href="">首页</a>&gt; <a href="" class="pst_val"></a>
+    </div>
+</div>
+<div class="nymain">
+    <div class="scd cl">
+        <div class="scd_l">
+            {volist name='type' id='vo'}
+            {if condition='$vo.id == $tid'}
+            <div class="l_name">{$vo.title}</div>
+            {/if}
+            {/volist}
+            <ul class="s_nav">
+                {volist name='parent_type' id='vo'}
+                {if condition='$aid == $vo.id '}
+                <li class="on">
+                    <a href="{:url('Index/about',['tid'=>$tid,'aid'=>$vo.id])}">{$vo.title}</a>
+                </li>
+                {else/}
+                <li class="">
+                    <a href="{:url('Index/about',['tid'=>$tid,'aid'=>$vo.id])}">{$vo.title}</a>
+                </li>
+                {/if}
+               {/volist}
+            </ul>
+        </div>
+        <div class="scd_r">
+            <div class="r_top"><span>{$data.title}</span></div>
+            <div class="scd_m cl">
+                {$data.content}
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name='js'}
+<script>
+    //当前位置
+    var l_name = $('.l_name').html();
+    $('.pst_val').html(l_name);
+    //默认选项
+    if ('{$aid}' == ''){
+        $('.s_nav li').eq(0).addClass('on');
+
+    }
+    //选择文章
+
+</script>
+{/block}

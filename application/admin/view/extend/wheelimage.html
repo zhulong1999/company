@@ -1,0 +1,124 @@
+{extend name='common/common'}
+{block name='css'}
+{/block}
+{block name='body'}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin: 20px">
+    <ul class="layui-tab-title">
+        <li class="layui-this">轮播图列表</li>
+        <li>添加轮播图</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="150">
+                    <col width="200">
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>轮播图</th>
+                    <th>标题</th>
+                    <th>排序</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name='list' id='vo' empty="<tr><td colspan='6' style='text-align: center'><b>暂无数据</b></td></tr>"}
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td><img src="{$vo.images}" style="width: 100px;height: 50px"></td>
+                    <td>{$vo.title}</td>
+                    <td>{$vo.sortd}</td>
+                    <td><span class="layui-badge" style="cursor: pointer" onclick="del($(this))" data-id="{$vo.id}">删除</span></td>
+                </tr>
+                 {/volist}
+                </tbody>
+            </table>
+        </div>
+        <div class="layui-tab-item">
+            <form class="layui-form" action="{:url('Extend/wheelimage')}" style="margin: 20px" method="post" enctype="multipart/form-data">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" placeholder="标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <input type="hidden" name="type" value="1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">排序</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="sortd" value="1" lay-verify="number" placeholder="排序" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">头图</label>
+                    <div class="layui-input-inline">
+                        <div class="layui-upload-drag" id="test10">
+                            <i class="layui-icon"></i>
+                            <p>点击上传，或将文件拖拽到此处</p>
+                        </div>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        <img src="" id="showHeadImage" style="width: 200px;height: 140px;border: 1px solid #ccc;display: none" alt="暂无图片">
+                        <input type="hidden" name="images" class="bannerimage">
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{/block}
+{block name='js'}
+<script>
+    layui.use(['form','upload','layer'], function(){
+        var form = layui.form;
+        var upload = layui.upload;
+        var layer = layui.layer;
+        //拖拽上传
+        upload.render({
+            elem: '#test10',
+            url: "{:url('Article/up')}",
+            done: function(res){
+
+                $('#showHeadImage').attr('src', res.data); //图片链接（base64）
+                $('#showHeadImage').show();
+                $('.bannerimage').val(res.data)
+            },
+
+        });
+
+
+
+    });
+    //删除轮播图
+    function del(that)
+    {
+        var id = that.attr('data-id');
+        $.ajax({
+            type:"post",
+            url:"{:url('Extend/delWheel')}",
+            data:{
+                id:id,
+            },
+            success:function (msg) {
+                windows(msg.status,msg.message);
+            },
+            error:function (msg) {
+                alert("服务器错误，错误代码："+msg.status);
+            }
+        })
+    }
+</script>
+{/block}

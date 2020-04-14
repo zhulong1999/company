@@ -1,0 +1,145 @@
+{extend name='common/common'}
+{block name='css'}
+{/block}
+{block name='body'}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin: 20px">
+    <ul class="layui-tab-title">
+        <li class="layui-this">添加文章</li>
+    </ul>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" action="{:url('Article/demo')}" style="margin: 20px">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">栏目分类</label>
+                    <div class="layui-input-block">
+                        <select name="typeid" lay-verify="required">
+                            {volist name='SonNavigationList', id='list'}
+                            {if condition='$list.parentid ==0'}
+                            <option value="{$list.id}" disabled>{$list.title}</option>
+                            {volist name='SonNavigationList' id='vo'}
+                            {if condition='$vo.parentid == $list.id'}
+                            <option value="{$vo.id}">-----{$vo.title}</option>
+                            {/if}
+                            {/volist}
+                            {/if}
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" placeholder="标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">SEO关键字</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keywords"  placeholder="SEO关键字1" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">SEO描述</label>
+                    <div class="layui-input-block">
+                        <textarea name="description" placeholder="SEO描述" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">排序</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="sortd" lay-verify="number" placeholder="排序" autocomplete="off" class="layui-input"  value="0">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">头图</label>
+                    <div class="layui-input-inline">
+                        <div class="layui-upload-drag" id="test10">
+                            <i class="layui-icon"></i>
+                            <p>点击上传，或将文件拖拽到此处</p>
+                        </div>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        <img src="" id="showHeadImage" style="width: 200px;height: 140px;border: 1px solid #ccc;display: none" alt="暂无图片">
+                    </div>
+
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">内容</label>
+                    <div class="layui-input-block">
+                        <div id="editor">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+{block name='js'}
+<script src="__STATIC__/admin/wangEditor/release/wangEditor.min.js"></script>
+<script>
+
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    editor.customConfig.uploadFileName = 'file';
+    editor.customConfig.uploadImgServer = "{:url('Article/up')}";
+    // editor.customConfig.uploadImgShowBase64 = true;  // 使用 base64 保存图片
+    editor.create();
+    layui.use(['form','upload','layer'], function(){
+        var form = layui.form;
+        var upload = layui.upload;
+        var layer = layui.layer;
+        //拖拽上传
+        upload.render({
+            elem: '#test10',
+            url: "{:url('Article/up')}",
+            done: function(res){
+                $('#showHeadImage').attr('src', res.data); //图片链接（base64）
+                $('#showHeadImage').show();
+            },
+
+        });
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            layer.load();
+            // 读取 html
+            var data = data.field;
+            var html = editor.txt.html();
+            var headImage = $("#showHeadImage").attr('src');
+            $.ajax({
+                type :"post",
+                url : "{:url('Article/addarticleinfo')}",
+                data:{
+                    head:data,
+                    content:html,
+                    headImage:headImage
+                },
+                success:function (msg) {
+                    layer.closeAll('loading');
+                    windows(msg.status,msg.message);
+                },
+                error:function (msg) {
+                    layer.closeAll('loading');
+                    alert('服务器错误，错误代码:' + msg.status);
+                }
+            });
+            return false;
+        });
+
+
+    });
+</script>
+{/block}

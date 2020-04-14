@@ -1,0 +1,240 @@
+{extend name='common/common'}
+{block name='css'}
+{/block}
+{block name='body'}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="padding-left: 10px">
+    <ul class="layui-tab-title">
+        <li class="layui-this">栏目列表</li>
+        <li>栏目添加</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="150">
+                    <col width="200">
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>栏目名称</th>
+                    <th>栏目类型(一级栏目/二级栏目)</th>
+                    <th>页面类型</th>
+                    <th>排序</th>
+                    <th>状态</th>
+                    <th>设置</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if condition = "!empty($list)"}
+                {volist name='list' id='vo'}
+                {if condition='$vo.parentid ==0'}
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.title}</td>
+                    <td>一级栏目</td>
+                    {if condition='$vo.sel == 1'}
+                    <td><span class="layui-badge " >列表页</span></td>
+                    {else/}
+                    <td><span class="layui-badge layui-bg-green ">内容页</span></td>
+                    {/if}
+                    <td>{$vo.sortd}</td>
+                    {if condition='$vo.isdelete == 2'}
+                    <td><span class="layui-badge fatherState" style="cursor: pointer" data-state="1" data-id="{$vo.id}">未启用</span></td>
+                    {else/}
+                    <td><span class="layui-badge layui-bg-green fatherState" style="cursor: pointer" data-state="2" data-id="{$vo.id}">已启用</span></td>
+                    {/if}
+                    <td>
+                        <span class="layui-badge fatherDelete" style="cursor: pointer" data-id="{$vo.id}">删除</span>
+                        <span class="layui-badge layui-bg-green fatherEdit" style="cursor: pointer" data-id="{$vo.id}">编辑</span>
+                    </td>
+                </tr>
+                    {volist name='list' id='vov'}
+                    {if condition='$vov.parentid == $vo.id'}
+                    <tr>
+                        <td>{$vov.id}</td>
+                        <td>------{$vov.title}</td>
+                        <td>二级栏目</td>
+                        {if condition='$vov.sel == 1'}
+                        <td><span class="layui-badge " >列表页</span></td>
+                        {else/}
+                        <td><span class="layui-badge layui-bg-green ">内容页</span></td>
+                        {/if}
+                        <td>{$vov.sortd}</td>
+                        {if condition='$vov.isdelete == 2'}
+                        <td><span class="layui-badge fatherState" style="cursor: pointer" data-state="1" data-id="{$vov.id}">未启用</span></td>
+                        {else/}
+                        <td><span class="layui-badge layui-bg-green fatherState" style="cursor: pointer" data-state="2" data-id="{$vov.id}">已启用</span></td>
+                        {/if}
+                        <td>
+                            <span class="layui-badge fatherDelete" style="cursor: pointer" data-id="{$vov.id}">删除</span>
+                            <span class="layui-badge layui-bg-green fatherEdit" style="cursor: pointer" data-id="{$vov.id}">编辑</span>
+                        </td>
+                    </tr>
+                    {/if}
+                    {/volist}
+                {/if}
+                {/volist}
+                {else/}
+                <tr>
+                    <td colspan="6" style="text-align: center"><b>暂无相关数据</b></td>
+                </tr>
+                {/if}
+                </tbody>
+            </table>
+
+        </div>
+        <div class="layui-tab-item">
+            <form class="layui-form " style="margin: 20px" action="{:url('Basics/navigation_add')}" method="post">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">栏目标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title"    placeholder="请输入标题" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">栏目类型</label>
+                    <div class="layui-input-block">
+                        <select name="parentid" lay-verify="required">
+                            <option value="0">一级栏目</option>
+                            <option  disabled>二级栏目</option>
+                            {volist name='list' id='vo'}
+                            {if condition='$vo.parentid ==0'}
+                            <option value="{$vo.id}">---{$vo.title}</option>
+                            {/if}
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">页面类型</label>
+                    <div class="layui-input-block">
+                        <select name="sel" lay-verify="required">
+                            <option value="1">列表页</option>
+                            <option value="2">内容页</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">排序</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="sortd" required lay-verify="required|numer" value="1"  placeholder="排序" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!--弹出框 父级编辑-->
+<div id="fatherEdit" style="display: none">
+    <form class="layui-form layui-form-pane" style="margin: 30px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">导航名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="fatherName"  placeholder="请输入导航名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" name="fatherSort"  placeholder="请输入排序" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">数字越小越靠前哦</div>
+        </div>
+    </form>
+</div>
+<!---->
+
+<!--弹出框 子级编辑-->
+<div id="sonEdit" style="display: none">
+    <form class="layui-form layui-form-pane" style="margin: 30px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">导航名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="sonName"  placeholder="请输入导航名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" name="sonSort"  placeholder="请输入排序" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">数字越小越靠前哦</div>
+        </div>
+    </form>
+
+</div>
+<!---->
+{/block}
+{block name='js'}
+<script>
+    layui.use(['form','layer'],function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        form.render('select'); //刷新select选择框渲染
+
+
+        /**
+         * 配置父导航状态
+         */
+        $('.fatherState').click(function () {
+            var state = $(this).attr('data-state');
+            var id  = $(this).attr('data-id');
+            $.post("{:url('Basics/navigation')}",{id:id,state:state},function (msg) {
+                windows(msg.status,msg.message);
+            });
+        });
+
+        /**
+         * 删除父导航
+         */
+        $('.fatherDelete').click(function () {
+            var id = $(this).attr('data-id');
+            $.post("{:url('Basics/navigationDelete')}",{id:id},function (msg) {
+                windows(msg.status,msg.message);
+            });
+        });
+
+         /**
+         * 编辑父导航
+         */
+         $('.fatherEdit').click(function () {
+             var id  = $(this).attr('data-id');
+             //获取父导航编辑框显示信息
+             $.post("{:url('Basics/getOneNavigationInfo')}",{id:id},function (msg) {
+                 var data = msg.data;
+                 $("input[name='fatherName']").val(data.title);
+                 $("input[name='fatherSort']").val(data.sortd);
+                 //弹出框
+                 layer.open({
+                     type: 1,
+                     skin: 'layui-layer-molv', //样式类名
+                     area: ['500px', '300px'],
+                     shadeClose: true, //开启遮罩关闭
+                     btn: ['配置','取消'],
+                     content: $('#fatherEdit'),
+                     btn1:function (index) {
+                         //编辑父导航信息
+                        var fatherName =  $("input[name='fatherName']").val();
+                        var fatherSort =  $("input[name='fatherSort']").val();
+                         $.post("{:url('Basics/editNavigationInfo')}",{id:id,title:fatherName,sortd:fatherSort},function (msg) {
+                             windows(msg.status,msg.message);
+                         })
+                     }
+
+                 });
+             });
+         });
+
+    })
+
+</script>
+{/block}

@@ -1,0 +1,70 @@
+{extend name='common/common'}
+{block name='body'}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="padding-left: 20px;">
+    <ul class="layui-tab-title">
+        <li class="layui-this">站点设置</li>
+    </ul>
+    <div class="layui-tab-content">
+        <form class="layui-form " style="margin: 20px" action="{:url('Basics/site')}" enctype="multipart/form-data" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">站点名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title"    placeholder="请输入标题" autocomplete="off" class="layui-input" value="{$data.title}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">站点LOGO</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" onclick="logo.click()">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+                    <input type="file" style="display: none" id="logo" name="logo">
+                </div>
+            </div>
+            <img src="__STATIC__/uploads/{$data.logo}" style="width: 100px;height: 100px;margin-left: 120px;margin-bottom: 20px" id="showLogo">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">站点关键词</label>
+                <div class="layui-input-block">
+                    <input type="text" name="Keyword"    placeholder="请输入站点关键词" autocomplete="off" class="layui-input" value="{$data.keywords}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">站点描述</label>
+                <div class="layui-input-block">
+                    <textarea name="describe" placeholder="请输入站点描述" class="layui-textarea">{$data.description}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">站点备案</label>
+                <div class="layui-input-block">
+                    <input type="text" name="footer"    placeholder="请输入站点备案" autocomplete="off" class="layui-input" value="{$data.footer}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+3
+{/block}
+{block name='js'}
+<script>
+    //预览图片
+    $("#logo").change(function () {
+        var that = $(this)[0].files[0];
+        var src = URL.createObjectURL(that);
+        $("#showLogo").show();
+        $("#showLogo").attr('src',src);
+
+    });
+    layui.use('form', function(){
+        var form = layui.form;
+    });
+</script>
+{/block}

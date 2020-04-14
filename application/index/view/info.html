@@ -1,0 +1,37 @@
+﻿{extend name='common'}
+{block name='title'}{$data.title}{/block}
+{block name='Keywords'}{$data.keywords}{/block}
+{block name='description'}{$data.description}{/block}
+{block name='body'}
+<div class="bg_b">
+    <div class="pst_info" >
+        您当前的位置：<a href="/">首页</a>&gt; <a href="">文章详情</a>
+    </div>
+</div>
+<div class="nymain">
+    <div class="scd cl">
+        <!--<div class="scd_l">-->
+            <!--<div class="l_name">新闻动态</div>-->
+            <!--<ul class="s_nav">-->
+                <!--<li class="on">-->
+                    <!--<a href="">公司新闻</a>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<a href="">行业动态</a>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+        <div class="">
+            <!--<div class="r_top"><span>公司新闻</span></div>-->
+            <div class="scd_m">
+                <h1 class="infotit">{$data.title}</h1>
+                <div class="conxx"><span>浏览人数：<em>{$data.num}</em></span>|<span>上传时间：<em>{:date('Y-m-d H:i:s',$data.pubtime)}</em></span></div>
+                <div class="desccon">
+                    {$data.content}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}

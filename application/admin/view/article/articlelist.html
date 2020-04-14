@@ -1,0 +1,208 @@
+{extend name='common/common'}
+{block name='css'}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<style>
+    .str{
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+</style>
+{/block}
+{block name='body'}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin: 20px">
+    <ul class="layui-tab-title">
+        <li class="layui-this">文章列表</li>
+    </ul>
+    <div class="layui-tab-content" style="padding: 20px">
+        <table class="layui-table">
+            <thead>
+            <tr><th colspan="12">
+                <form action="" class="layui-form" method="get" >
+                    <div class="layui-form-item">
+                        <div class="layui-input-inline">
+                            <button class="layui-btn  layui-btn-danger  batchDelete"><i class="layui-icon">&#xe640;</i> 批量删除</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-inline">
+                            <input type="text" name="info" placeholder="搜索文章" autocomplete="off" class="layui-input" value="{:request()->get('info')}">
+                        </div>
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit >搜索</button>
+                        </div>
+                    </div>
+
+                </form>
+            </th></tr>
+            <tr>
+                <th style="width: 10px"> <input type="checkbox" lay-skin="primary" class="chebox" id="selectAll" name="selectAll"></th>
+                <th style="width: 20px">id</th>
+                <th style="width: 200px">文章标题</th>
+                <th >文章栏目</th>
+                <th style="width: 200px">文章关键字</th>
+                <th>首页图片</th>
+                <th>文章内容</th>
+                <th>发布者</th>
+                <th>发布时间</th>
+                <th>排序</th>
+                <th>文章状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {volist name='list' id='vo' empty="<tr><td colspan='12' style='text-align: center'><b>暂无数据</b></td></tr>"}
+            <tr>
+                <td><input type="checkbox"  name="chooseInfo" id="chooseInfo" data-id="{$vo.aid}" ></td>
+                <td>{$vo.aid}</td>
+                <td class="str" title="{$vo.title}">{$vo.title}</td>
+                <td>{$vo.typetitle}</td>
+                <td class="str" title="{$vo.keywords}">{$vo.keywords}</td>
+                <td><img src="{$vo.images}" alt="暂无图片" style="height: 30px;height: 40px;"></td>
+                <td><a href="javascript:;" onclick="showOneArticleInfo('{$vo.aid}')">点击查看</a></td>
+                <td>{$vo.pubname}</td>
+                <td>{:date('Y-m-d H:i:s',$vo.pubtime)}</td>
+                <td>{$vo.sortd}</td>
+                {if condition='$vo.isdelete == 2'}
+                <td><span class="layui-badge " style="cursor: pointer" data-id="{$vo.aid}" data-state="2" onclick="openState('{$vo.aid}')">未启用</span></td>
+                {else/}
+                <td><span class="layui-badge layui-bg-green " style="cursor: pointer" data-id="{$vo.aid}" data-state="1" onclick="closeState('{$vo.aid}')">已启用</span></td>
+                {/if}
+                <td>
+                    <span class="layui-badge " style="cursor: pointer" data-id="{$vo.aid}" onclick="articleDelete('{$vo.aid}')">删除</span>
+                    <span class="layui-badge layui-bg-green " style="cursor: pointer" data-id="{$vo.aid}" onclick="editArticle('{$vo.aid}')">编辑</span>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        <div style="text-align: center">{$page}</div>
+    </div>
+</div>
+{/block}
+{block name='js'}
+<script>
+    layui.use(['form','layer'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        //全选表格
+        $('input[name="selectAll"]').on("click",function(){
+            if($(this).is(':checked')){
+                $('input[name="chooseInfo"]').each(function(){
+                    $(this).prop("checked",true);
+                });
+            }else{
+                $('input[name="chooseInfo"]').each(function(){
+                    $(this).prop("checked",false);
+                });
+            }
+        });
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+
+    //显示指定文章内容
+    function showOneArticleInfo(id)
+    {
+        var index = layer.open({
+                type: 2,
+                content: "{:url('Article/showonearticeinfo')}?id=" + id,
+                area: ['960px', '500px'],
+                skin: 'layui-layer-molv',
+                maxmin: true
+        });
+        layer.full(index);
+    }
+
+    //关闭文章
+    function closeState(id) {
+        $.ajax({
+            type: 'post',
+            url:"{:url('Article/setArticleState')}",
+            data:{
+                id:id,
+                articleState:2
+            },
+            success:function (msg) {
+               windows(msg.status,msg.message);
+            },
+            error:function (msg) {
+                alert('服务器错误! 错误代码:' +msg.status);
+            }
+        })
+    }
+
+    //开启文章
+    function openState(id) {
+        $.ajax({
+            type: 'post',
+            url:"{:url('Article/setArticleState')}",
+            data:{
+                id:id,
+                articleState:1
+            },
+            success:function (msg) {
+                windows(msg.status,msg.message);
+            },
+            error:function (msg) {
+                alert('服务器错误! 错误代码:' +msg.status);
+            }
+        })
+    }
+
+    //删除文章
+    function articleDelete(id) {
+        $.ajax({
+            type: 'post',
+            url:"{:url('Article/articleDelete')}",
+            data:{
+                id:id,
+            },
+            success:function (msg) {
+                windows(msg.status,msg.message);
+            },
+            error:function (msg) {
+                alert('服务器错误! 错误代码:' +msg.status);
+            }
+        })
+    }
+
+    //编辑文章
+    function editArticle(id) {
+       layer.open({
+            type: 2,
+            content: "{:url('Article/editonearticeinfo')}?id=" + id,
+            skin: 'layui-layer-molv',
+            area: ['1000px', '800px'],
+            maxmin: true
+        });
+    }
+
+    //批量删除
+    $('.batchDelete').click(function () {
+        var id = [];
+        $.each($("input[name='chooseInfo']:checked"),function (key,value) {
+            id.push(value.getAttribute('data-id'));
+        });
+        $.ajax({
+            type:"post",
+            url:"{:url('Article/batchDelete')}",
+            data:{
+                id:id,
+            },
+            success:function (msg) {
+                windows(msg.status,msg.message);
+            },
+            error:function (msg) {
+                windows(msg.status,msg.message);
+            }
+        })
+    });
+</script>
+{/block}

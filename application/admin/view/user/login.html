@@ -1,0 +1,63 @@
+{extend name='common/common'}
+{block name='css'}
+<!-- CSS -->
+<link rel='stylesheet' href='http://fonts.googleapis.com/css?family=PT+Sans:400,700'>
+<link rel="stylesheet" href="__STATIC__/admin/login/css/reset.css">
+<link rel="stylesheet" href="__STATIC__/admin/login/css/supersized.css">
+<link rel="stylesheet" href="__STATIC__/admin/login/css/style.css">
+{/block}
+
+
+
+{block name='body'}
+<body style="background: #009688">
+<div class="page-container">
+    <h1>后台管理系统</h1>
+    <form  class="layui-form">
+        <input type="text" name="username" class="username" placeholder="用户名" autocomplete="off">
+        <input type="password" name="password" class="password" placeholder="密码" autocomplete="off">
+        <div style="">
+            <input type="text" name="yzm" class="yzm" placeholder="验证码" style="width: 160px;" autocomplete="off">
+            <img title="看不清点击刷新" src="{:url('User/getYzm')}" style=" cursor:pointer; width: 100px;height: 40px;position: relative;top: 15px;border: 1px solid #ccc;border-radius: 5px"  onclick="this.src=this.src+'?'+Math.random()">
+        </div>
+        <button type="button">立即登录</button>
+    </form>
+</div>
+</body>
+{/block}
+{block name='js'}
+<script>
+    /**
+     * 管理员登录
+     */
+    $('button').click(function () {
+        var user = $('.username').val();
+        var pass = $('.password').val();
+        var code = $('.yzm').val();
+        $.ajax({
+            type:"post",
+            url:"{:url('User/login')}",
+            data:{
+                user:user,
+                pass:pass,
+                code:code
+            },
+            success:function (msg) {
+                if (msg.status == 200){
+                    alert(msg.message);
+                    location.href="{:url('Index/index')}";
+                }else {
+                    alert(msg.message);
+                }
+            },
+            error:function (msg) {
+                alert("登录错误!错误代码:"+msg.status);
+            }
+        })
+    });
+</script>
+{/block}
+
+
+
+

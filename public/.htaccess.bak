@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{HTTP:From-Https} !^on$ [NC]
+RewriteCond %{HTTP_HOST} ^(www.)?rick1999.top$ [NC]
+RewriteRule ^(.*)$ https://www.rick1999.top/$1 [R=301,L]
+</IfModule>

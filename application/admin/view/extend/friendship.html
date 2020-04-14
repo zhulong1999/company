@@ -1,0 +1,100 @@
+{extend name='common:common'}
+{block name='css'}
+
+{/block}
+{block name='body'}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin: 20px">
+    <ul class="layui-tab-title">
+        <li class="layui-this">友情链接列表</li>
+        <li>添加友情链接</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="150">
+                    <col width="200">
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>名称</th>
+                    <th>链接</th>
+                    <th>排序</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name='list' id='vo' empty="<tr><td colspan='6' style='text-align: center'><b>暂无数据</b></td></tr>"}
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.title}</td>
+                    <td>{$vo.link}</td>
+                    <td>{$vo.sortd}</td>
+                    <td><span class="layui-badge" style="cursor: pointer" onclick="del($(this))" data-id="{$vo.id}">删除</span></td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+        <div class="layui-tab-item">
+            <form class="layui-form" action="{:url('Extend/friendship')}" style="margin: 20px" method="post" >
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" placeholder="标题" required lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">链接</label>
+                    <div class="layui-input-block">
+                        <input type="url" name="link"  placeholder="链接" required lay-verify="required|url" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">排序</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="sortd" value="1" required lay-verify="required|number"  placeholder="排序" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+{block name='js'}
+<script>
+    //删除轮播图
+    function del(that)
+    {
+        var id = that.attr('data-id');
+        $.ajax({
+            type:"post",
+            url:"{:url('Extend/delFriendship')}",
+            data:{
+                id:id,
+            },
+            success:function (msg) {
+                windows(msg.status,msg.message);
+            },
+            error:function (msg) {
+                alert("服务器错误，错误代码："+msg.status);
+            }
+        })
+    }
+</script>
+{/block}
+
+
+
+
