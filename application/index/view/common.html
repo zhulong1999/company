@@ -5,7 +5,7 @@
     <meta name="Keywords" content="{block name='Keywords'}{$site.keywords}{/block}" />
     <meta name="description" content="{block name='description'}{$site.description}{/block}" />
 
-    <title>{block name='title'}南通富泰纸业有限公司{/block}</title>
+    <title>{$site.title} - {block name='title'}首页{/block}</title>
     <link href="__STATIC__/index/css/base.css" rel="stylesheet" type="text/css" />
     <link href="__STATIC__/index/css/main.css" rel="stylesheet" type="text/css" />
 
@@ -15,10 +15,10 @@
 <body>
     <div class="header">
         <div class="contentbox">
-            <div class="hd_txt">欢迎光临南通富泰纸业有限公司！</div>
+            <div class="hd_txt">欢迎光临{$site.title}！</div>
             <div class="hd_right">
-                <a href="#"><img src="__STATIC__/index/images/topicon1.png" />网站首页</a>
-                <a href="#"><img src="__STATIC__/index/images/topicon2.png" />关于我们</a>
+                <a href="/"><img src="__STATIC__/index/images/topicon1.png" />网站首页</a>
+                <a href="{:url('Index/about',['tid'=>1])}"><img src="__STATIC__/index/images/topicon2.png" />关于我们</a>
                 <a href="#" onclick="javascript:addFavorite2()"><img src="__STATIC__/index/images/topicon3.png" />加入收藏</a>
             </div>
             <div class="clearfix"></div>
@@ -26,10 +26,10 @@
     </div>
     <div class="menulogo">
         <div class="contentbox">
-            <div class="logo"><a href="#"><img src="__STATIC__/index/images/logo.png" /></a></div>
+            <div class="logo"><a href="/"><img src="__STATIC__/uploads/{$site.logo}" alt="{$site.title}" title="{$site.title}"/></a></div>
             <div class="nav">
                 <ul class="cl">
-                    <li><a href="/index" class='{if condition="request()->url() == '/index'"}cur{/if}'>网站首页</a></li>
+                    <li><a href="/index" class='{if condition="request()->url() == '/index' or request()->url() =='/'"}cur{/if}'>网站首页</a></li>
                     {volist name='type' id='vo'}
                         {if condition='$vo.sel == 1'}
                         <li><a href="{:url('Index/about',['tid'=>$vo.id ])}" class='{if condition="request()->param('tid') == $vo.id"}cur{/if}'>{$vo.title}</a></li>
@@ -60,14 +60,65 @@
     <div class="footer">
         <div class="ftmenu">
             {volist name='type' id='vo'}
-                {if condition='$vo.parentid == 0'}
-                    <a href="/about">{$vo.title}</a>
-                {/if}
+            {if condition='$vo.sel == 1'}
+            <a href="{:url('Index/about',['tid'=>$vo.id ])}" class='{if condition="request()->param('tid') == $vo.id"}cur{/if}'>{$vo.title}</a>
+            {elseif condition='$vo.sel == 2'/}
+            <a href="{:url('Index/imglist',['tid'=>$vo.id ])}" class='{if condition="request()->param('tid') == $vo.id"}cur{/if}'>{$vo.title}</a>
+            {elseif condition='$vo.sel == 3'}
+            <a href="{:url('Index/_list',['tid'=>$vo.id ])}" class='{if condition="request()->param('tid') == $vo.id"}cur{/if}'>{$vo.title}</a>
+            {/if}
             {/volist}
         </div>
         <div class="ft_txt">
             地址：{$company.address}   电话：{$company.phone}   E-mail:{$company.email}<br />版权所有：{$company.title} - {$site.footer}
         </div>
+    </div>
+    <!--留言-->
+    <div class="liuyan">
+        <div class="title">
+            <b>请您留言：</b>
+        </div>
+        <div class="lianxi">
+            <h3>{$company.title}</h3>
+            <h5>{$company.phone}</h5>
+        </div>
+        <div class="form">
+            <textarea placeholder="请在此输入留言内容，我们会尽快与您联系。（必填）" class="ly_info"></textarea>
+            <input type="text" placeholder="姓名" class="ly_name">
+            <input type="text" placeholder="电话（必填）" class="ly_phone">
+            <input type="text" placeholder="邮箱" class="ly_em">
+            <input type="text" placeholder="地址" class="ly_address">
+            <button class="ly">留言</button>
+        </div>
+    </div>
+    <!--联系我们-->
+    <div class="tel">
+        <ul>
+            <li>
+                <a href="tencent://Message/?Uin={$company.qq}&amp;websiteName=q-zone.qq.com&amp;Menu=yes">
+                    <i class="tel_qq"></i>
+                    QQ资讯
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;" onclick="alert('微信:{$company.wechat}')">
+                    <i class="tel_wx"></i>
+                    微信
+                </a>
+            </li>
+            <li>
+                <a href="tel:{$company.phone}" onclick="alert('{$company.phone}')">
+                    <i class="tel_phone"></i>
+                    电话号码
+                </a>
+            </li>
+            <li>
+                <a href="mailto:522607023@qq.com">
+                    <i class="tel_lx"></i>
+                    邮箱
+                </a>
+            </li>
+        </ul>
     </div>
 </body>
 <script type="text/javascript" src="__STATIC__/index/js/jquery-1.8.3.min.js"></script>
@@ -108,6 +159,52 @@
             alert('您的浏览器不支持,请按 Ctrl+D 手动收藏!');
         }
     }
+    //判定是否是手机访问
+    var ua = navigator.userAgent;
+    var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
+        isIphone = !ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
+        isAndroid = ua.match(/(Android)\s+([\d.]+)/),
+        isMobile = isIphone || isAndroid;
+    //判断
+    if (isMobile) {
+        //移动端
+        location.href="{:url('mobile/index/index')}"
+    } else {
+        //PC
+        console.log('PC端');
+    }
+    //留言
+    $('.ly').click(function () {
+        var name = $('.ly_name').val();
+        var phone = $('.ly_phone').val();
+        var em = $('.ly_em').val();
+        var address = $('.ly_address').val();
+        var info = $('.ly_info').val();
+        var json = {
+            info:info,
+            name:name,
+            phone:phone,
+            em:em,
+            address:address
+        };
+        $.ajax({
+            url:"{:url('Index/ly')}",
+            type:"post",
+            data:json,
+            success(msg){
+                console.log(msg);
+                if (msg.status == 200){
+                    alert(msg.message);
+                    location.reload();
+                }else {
+                    alert(msg.message);
+                }
+            },
+            error(msg){
+                alert('留言失败');
+            }
+        })
+    });
 </script>
 {block name='js'}{/block}
 </html>

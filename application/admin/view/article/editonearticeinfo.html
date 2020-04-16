@@ -12,22 +12,21 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">栏目分类</label>
                     <div class="layui-input-block">
-                        <select name="typeid" lay-verify="required">
-                            
-                                        {volist name='SonNavigationList', id='listt'}
-                                            {if condition='$listt.parentid ==0'}
-                                                <option value="{$listt.id}" disabled>{$listt.title}</option>
-                                                    {volist name='SonNavigationList' id='vov'}
-                                                    {if condition='$vov.parentid == $listt.id'}
-                                                    <option value="{$vov.id}">-----{$vov.title}</option>
-                                                    {/if}
-                                                    {/volist}
-                                            {/if}
-                                        {/volist}
-                   
+                        <select name="typeid" lay-verify="required" lay-filter='typeid' class="typeid">
+                            {volist name='SonNavigationList', id='listt'}
+                            {if condition='$listt.parentid ==0'}
+                            <option value="{$listt.id}" disabled>{$listt.title}</option>
+                            {volist name='SonNavigationList' id='vov'}
+                            {if condition='$vov.parentid == $listt.id'}
+                            <option value="{$vov.id}" data-pid="{$vov.parentid}">-----{$vov.title}</option>
+                            {/if}
+                            {/volist}
+                            {/if}
+                            {/volist}
                         </select>
                     </div>
                 </div>
+                <input type="hidden" name="parentid" class="parentid" value="{$vo.parentid}">
                 <div class="layui-form-item">
                     <label class="layui-form-label">标题</label>
                     <div class="layui-input-block">
@@ -47,9 +46,22 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
+                    <label class="layui-form-label">文章分类</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="artype" value="1" title="普通"  {if condition="$vo.artype==1"}checked{/if}>
+                        <input type="radio" name="artype" value="2" title="报价" {if condition="$vo.artype==2"}checked{/if}>
+                    </div>
+                </div>
+                <div class="layui-form-item">
                     <label class="layui-form-label">排序</label>
                     <div class="layui-input-block">
                         <input type="text" name="sortd" lay-verify="number" placeholder="排序" autocomplete="off" class="layui-input" value="{$vo.sortd}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="time"  placeholder="时间" autocomplete="off" class="layui-input" id="time">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -106,9 +118,16 @@
     editor.customConfig.uploadImgServer = "{:url('Article/up')}";
     // editor.customConfig.uploadImgShowBase64 = true;  // 使用 base64 保存图片
     editor.create();
-    layui.use(['form','upload'], function(){
+    layui.use(['form','upload','laydate'], function(){
         var form = layui.form;
         var upload = layui.upload;
+        var laydate = layui.laydate;
+        //时间选择
+        laydate.render({
+            elem:"#time",
+            type:"datetime",
+            value:"{:date('Y-m-d H:i:s',$vo.pubtime)}"
+        });
         //拖拽上传
         upload.render({
             elem: '#test10',
@@ -130,7 +149,10 @@
                 }
             })
             form.render('select');
-
+        //选择parentid
+        form.on('select(typeid)',function(data){
+            $('.parentid').val($('.typeid  option:selected').attr('data-pid'));
+        });
         //监听提交
         form.on('submit(formDemo)', function(data){
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引

@@ -13,13 +13,14 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">栏目分类</label>
                     <div class="layui-input-block">
-                        <select name="typeid" lay-verify="required">
+                        <select name="typeid" lay-verify="required" lay-filter='typeid' class="typeid">
+                            <option value="">请选择</option>
                             {volist name='SonNavigationList', id='list'}
                             {if condition='$list.parentid ==0'}
                             <option value="{$list.id}" disabled>{$list.title}</option>
                             {volist name='SonNavigationList' id='vo'}
                             {if condition='$vo.parentid == $list.id'}
-                            <option value="{$vo.id}">-----{$vo.title}</option>
+                            <option value="{$vo.id}" data-pid="{$vo.parentid}">-----{$vo.title}</option>
                             {/if}
                             {/volist}
                             {/if}
@@ -27,6 +28,7 @@
                         </select>
                     </div>
                 </div>
+                <input type="hidden" name="parentid" class="parentid">
                 <div class="layui-form-item">
                     <label class="layui-form-label">标题</label>
                     <div class="layui-input-block">
@@ -45,14 +47,25 @@
                         <textarea name="description" placeholder="SEO描述" class="layui-textarea"></textarea>
                     </div>
                 </div>
-
+                <div class="layui-form-item">
+                    <label class="layui-form-label">文章分类</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="artype" value="1" title="普通" checked>
+                        <input type="radio" name="artype" value="2" title="报价" >
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">排序</label>
                     <div class="layui-input-block">
                         <input type="text" name="sortd" lay-verify="number" placeholder="排序" autocomplete="off" class="layui-input"  value="0">
                     </div>
                 </div>
-
+                <div class="layui-form-item">
+                    <label class="layui-form-label">时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="time"  placeholder="时间" autocomplete="off" class="layui-input" value="" id="time">
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">头图</label>
                     <div class="layui-input-inline">
@@ -98,10 +111,17 @@
     editor.customConfig.uploadImgServer = "{:url('Article/up')}";
     // editor.customConfig.uploadImgShowBase64 = true;  // 使用 base64 保存图片
     editor.create();
-    layui.use(['form','upload','layer'], function(){
+    layui.use(['form','upload','layer','laydate'], function(){
         var form = layui.form;
         var upload = layui.upload;
         var layer = layui.layer;
+        var laydate = layui.laydate;
+        //时间选择
+        laydate.render({
+            elem:"#time",
+            type:"datetime",
+            value:"{:date('Y-m-d H:i:s')}"
+        });
         //拖拽上传
         upload.render({
             elem: '#test10',
@@ -111,6 +131,10 @@
                 $('#showHeadImage').show();
             },
 
+        });
+        //选择parentid
+        form.on('select(typeid)',function(data){
+            $('.parentid').val($('.typeid  option:selected').attr('data-pid'));
         });
         //监听提交
         form.on('submit(formDemo)', function(data){

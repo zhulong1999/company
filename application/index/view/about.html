@@ -5,7 +5,7 @@
 {block name='body'}
 <div class="bg_b">
     <div class="pst">
-        您当前的位置：<a href="">首页</a>&gt; <a href="" class="pst_val"></a>
+        您当前的位置：<a href="/">首页</a>&gt; <a href="" class="pst_val"></a>
     </div>
 </div>
 <div class="nymain">
@@ -36,7 +36,19 @@
                 {$data.content}
             </div>
         </div>
+        <div class="scd_l">
+            <div class="l_name">联系我们</div>
+            <div class="tel_fs">
+                <ul>
+                    <li>联系电话：<u>{$company.phone}</u></li>
+                    <li>联系QQ：<span>{$company.qq}</span></li>
+                    <li>联系人：<span>{$company.contact}</span></li>
+                    <li>公司地址：<span>{$company.address}</span></li>
+                </ul>
+            </div>
+        </div>
     </div>
+
 </div>
 {/block}
 {block name='js'}

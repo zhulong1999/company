@@ -70,8 +70,9 @@ class Article extends Controller
             $req = request() ->param();
             $info = array(
                 "typeid" => intval($req['head']['typeid']),
-                "parentid" =>1,
+                "parentid" =>intval($req['head']['parentid']),
                 "title" => trim($req['head']['title']),
+                "artype" =>intval($req['head']['artype']),
                 "sortd" => trim($req['head']['sortd']),
                 "images" => trim($req['headImage']),
                 "content" => trim($req['content']),
@@ -79,7 +80,7 @@ class Article extends Controller
                 'description' => trim($req['head']['description']),
                 'pubid' => session('user')['id'],
                 'pubname' => session('user')['user'],
-                'pubtime'=> time(),
+                'pubtime'=> intval(strtotime($req['head']['time'])),
             );
             $ret = Db::name('article')->insert($info);
             if ($ret >= 1){
@@ -205,12 +206,13 @@ class Article extends Controller
                 "keywords" => trim($req['head']['keywords']),
                 "description" =>trim( $req['head']['description']),
                 "sortd" => intval($req['head']['sortd']),
+                "parentid" =>intval($req['head']['parentid']),
+                "artype" =>intval($req['head']['artype']),
                 "images" => trim($req['images']),
                 "content" => trim($req['content']),
                 'pubid' => session('user')['id'],
                 'pubname' => session('user')['user'],
-                'pubtime'=> time(),
-
+                'pubtime'=> intval(strtotime($req['head']['time'])),
             );
             $ret =  Db::name('article')->where('aid',intval($req['id']))->update($info);
             if ($ret >= 1){

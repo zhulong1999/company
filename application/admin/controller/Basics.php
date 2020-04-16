@@ -39,8 +39,9 @@ class Basics extends  Controller
             $data['pubid'] = session('user')['id'];
             $data['pubname'] = session('user')['user'];
             $data['pubtime'] = time();
+//            dump($file);exit;
             // 移动到框架应用根目录/public/uploads/ 目录下
-            if($file){
+            if($file&& $file != null){
                 $info = $file->move(ROOT_PATH . 'public/static' . DS . 'uploads');
                 if($info){
                     $logo = $info->getSaveName();
@@ -80,10 +81,11 @@ class Basics extends  Controller
             $data['introduce'] = trim($req['introduce']);
             $data['contact'] = trim($req['contact']);
             $data['phone'] = trim($req['phone']);
+            $data['qq'] = intval($req['qq']);
             $data['number'] = trim($req['number']);
             $data['wechat'] = trim($req['wechat']);
             $data['email'] = trim($req['email']);
-            $data['address'] = trim($req['title']);
+            $data['address'] = trim($req['address']);
             $data['pubid'] = session('user')['id'];
             $data['pubname'] = session('user')['user'];
             $data['pubtime'] = time();
